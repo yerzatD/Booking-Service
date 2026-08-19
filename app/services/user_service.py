@@ -33,5 +33,22 @@ class UserService:
         access_token = create_access_token(data={"sub": str(user.id)})
         return Token(access_token=access_token, token_type="bearer")
 
+    async def update_me(self,data : UserUpdate) -> UserResponse:
+        existing1 = await self.user_repository.get_user_by_username(data.username)
+        existing2 = await self.user_repository.get_user_by_email(data.email)
+        if existing1 is not None or existing2 is not None:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="User with this username or email already registred")
+        user = await self.user_repository.update_user(data)
+        return UserResponse.model_validate(user)
+
+    async def get_info_about_me(self, current_user: User) -> UserResponse:
+        user = await self.user_repository.get_user_by_id(current_user.id)
+        if not user:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="User not found",
+            )
+        return UserResponse.model_validate(user)
 
 
+    
