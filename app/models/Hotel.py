@@ -1,4 +1,4 @@
-from ...database import Base
+from ..database import Base
 from sqlalchemy import Column,String,Integer,Float,ForeignKey,DateTime
 from sqlalchemy.orm import relationship
 from datetime import datetime
@@ -13,7 +13,7 @@ class Hotel(Base):
     address = Column(String,nullable=False)
     city = Column(String,nullable=False)
     rating = Column(Float)
-    rooms = Column(Integer)
+    room_count = Column(Integer)
 
     bookings = relationship("Booking", back_populates="hotel")
     rooms = relationship("Room", back_populates="hotel", cascade="all, delete-orphan")
