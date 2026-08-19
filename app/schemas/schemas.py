@@ -23,11 +23,17 @@ class UserResponseForAdmin(BaseModel):
     username : str
     email : str
 
+
+
 class UserResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
     
     username : str
     email : str
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str   
 
 # ==================== HOTEL ====================
  
