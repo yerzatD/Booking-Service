@@ -13,7 +13,7 @@ class Hotel(Base):
     address = Column(String,nullable=False)
     city = Column(String,nullable=False)
     rating = Column(Float)
-    room_count = Column(Integer)
+    rooms_count = Column(Integer)
 
     bookings = relationship("Booking", back_populates="hotel")
     rooms = relationship("Room", back_populates="hotel", cascade="all, delete-orphan")

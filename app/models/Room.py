@@ -14,7 +14,7 @@ class Room(Base):
     price_per_night = Column(Float,nullable=False)
     capacity = Column(Integer,nullable=False)
     description = Column(String)
-    is_available = Column(Boolean,default="True")
+    is_available = Column(Boolean,default=True)
 
     hotel = relationship("Hotel", back_populates="rooms")
     bookings = relationship("Booking", back_populates="room")

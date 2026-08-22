@@ -12,7 +12,7 @@ class User(Base):
     email = Column(String,index=True,unique=True)
     hashed_password = Column(String)
     role = Column(String,default="user")
-    is_active = Column(Boolean, default="True")
+    is_active = Column(Boolean, default=True)
     created_at = Column(DateTime,default=datetime.utcnow)
 
     bookings = relationship("Booking", back_populates="user", cascade="all, delete-orphan")
