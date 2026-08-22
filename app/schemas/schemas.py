@@ -1,6 +1,7 @@
 from pydantic import BaseModel,Field,EmailStr,ConfigDict
 from typing import Optional,List
 from datetime import datetime
+from .enums import RoomType,BookingStatus
 
 # ==================== USER ====================
 class UserBase(BaseModel):
@@ -68,7 +69,7 @@ class HotelRead(HotelBase):
  
 class RoomBase(BaseModel):
     room_number: str
-    room_type: str
+    room_type: RoomType
     price_per_night: float = Field(gt=0)
     capacity: int = Field(gt=0)
     description: Optional[str] = None
@@ -80,7 +81,7 @@ class RoomCreate(RoomBase):
  
 class RoomUpdate(BaseModel):
     room_number: Optional[str] = None
-    room_type: Optional[str] = None
+    room_type: Optional[RoomType] = None
     price_per_night: Optional[float] = Field(default=None, gt=0)
     capacity: Optional[int] = Field(default=None, gt=0)
     description: Optional[str] = None
@@ -92,6 +93,8 @@ class RoomRead(RoomBase):
  
     id: int
     hotel_id: int
+    room_type : RoomType
+    price_per_night : float
     is_available: bool
  
  
@@ -110,7 +113,7 @@ class BookingCreate(BookingBase):
  
  
 class BookingUpdate(BaseModel):
-    status: Optional[str] = None
+    status: Optional[BookingStatus] = None
  
  
 class BookingRead(BookingBase):
@@ -119,7 +122,7 @@ class BookingRead(BookingBase):
     id: int
     user_id: int
     total_price: float
-    status: str
+    status: BookingStatus
  
  
 # ==================== REVIEW ====================
