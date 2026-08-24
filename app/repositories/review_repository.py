@@ -10,7 +10,7 @@ class ReviewRepository:
     def __init__(self,db : AsyncSession):
         self.db = db
 
-    async def create_review(self,current_user : User, data : ReviewCreate) -> ReviewRead:
+    async def create_review(self,current_user : User, data : ReviewCreate):
         new_review = Review(
             user_id=current_user.id,
             hotel_id=data.hotel_id,
@@ -21,9 +21,9 @@ class ReviewRepository:
         self.db.add(new_review)
         await self.db.commit()
         await self.db.refresh(new_review)
-        return ReviewRead.model_validate(new_review)
+        return new_review
 
-    async def update_review(self, current_user: User, hotel_id: int, data: ReviewUpdate) -> ReviewRead | None:
+    async def update_review(self, current_user: User, hotel_id: int, data: ReviewUpdate):
         result = await self.db.execute(
             select(Review).where(Review.user_id == current_user.id, Review.hotel_id == hotel_id)
         )
@@ -39,7 +39,7 @@ class ReviewRepository:
         self.db.add(review)
         await self.db.commit()
         await self.db.refresh(review)
-        return ReviewRead.model_validate(review)
+        return review
 
     async def delete_review(self, current_user: User, hotel_id: int) -> bool:
         result = await self.db.execute(
@@ -53,18 +53,18 @@ class ReviewRepository:
         await self.db.commit()
         return True
 
-    async def get_all_reviews(self) -> list[ReviewRead]:
+    async def get_all_reviews(self):
         result = await self.db.execute(select(Review))
         reviews = result.scalars().all()
-        return [ReviewRead.model_validate(review) for review in reviews]
+        return reviews
 
-    async def get_reviews_above_rating(self, rating: float = 4.0) -> list[ReviewRead]:
+    async def get_reviews_above_rating(self, rating: float = 4.0):
         result = await self.db.execute(select(Review).where(Review.rating > rating))
         reviews = result.scalars().all()
-        return [ReviewRead.model_validate(review) for review in reviews]
+        return reviews
 
-    async def get_reviews_below_rating(self, rating: float = 4.0) -> list[ReviewRead]:
+    async def get_reviews_below_rating(self, rating: float = 4.0):
         result = await self.db.execute(select(Review).where(Review.rating < rating))
         reviews = result.scalars().all()
-        return [ReviewRead.model_validate(review) for review in reviews]
+        return reviews
     
