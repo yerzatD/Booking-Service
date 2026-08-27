@@ -4,13 +4,13 @@ from .config import settings
 
 
 engine = create_async_engine(settings.database_url,echo=True)
-SessionLocal = async_sessionmaker(bind=engine,expire_on_commit=False)
+AsyncSessionLocal = async_sessionmaker(bind=engine,expire_on_commit=False)
 
 class Base(DeclarativeBase):
     pass
 
 async def get_db():
-    async with SessionLocal() as db:
+    async with AsyncSessionLocal() as db:
         yield db
 
     
