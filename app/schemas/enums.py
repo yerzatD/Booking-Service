@@ -6,6 +6,7 @@ class RoomType(str, Enum):
     twin = "twin"
     suite = "suite"
     deluxe = "deluxe"
+    family = "family"
 
 
 class BookingStatus(str, Enum):

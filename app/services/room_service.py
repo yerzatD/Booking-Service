@@ -9,19 +9,22 @@ from ..models.Room import Room
 from ..repositories.room_repository import RoomRepository
 from ..schemas.enums import RoomType
 from ..schemas.schemas import RoomRead
-
+from ..models.Hotel import Hotel
+from ..repositories.hotel_repository import HotelRepository
+from ..models.Hotel import Hotel
 
 class RoomService:
     def __init__(self, db: AsyncSession):
         self.db = db
         self.repo = RoomRepository(db)
+        self.hotel_repository = HotelRepository(db)
 
     @staticmethod
     def _to_read(room: Room) -> RoomRead:
         return RoomRead.model_validate(room)
 
-    async def get_room(self, room_id: int) -> RoomRead:
-        room = await self.repo.get_room_by_id(room_id)
+    async def get_room(self, hotel_id: int, room_id: int) -> RoomRead:
+        room = await self.repo.get_room_by_id(room_id, hotel_id)
         if room is None:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Room not found")
         return self._to_read(room)
@@ -43,15 +46,12 @@ class RoomService:
         rooms = await self.repo.get_room_by_type(room_type)
         return [self._to_read(r) for r in rooms]
 
+
     async def is_room_available_for_dates(
         self, room_id: int, check_in: datetime, check_out: datetime) -> bool:
-
-        room = await self.repo.get_room_by_id(room_id)
+        room = await self.repo.get_room_by_id_plain(room_id)
         if room is None:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Room not found")
-
-        if not room.is_available:
-            return False
 
         result = await self.db.execute(
             select(Booking).where(

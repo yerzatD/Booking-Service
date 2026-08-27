@@ -16,7 +16,7 @@ class UserService:
     async def register_user(self,data : UserCreate) -> UserResponse:
         existing = await self.user_repository.get_user_by_username(data.username)
         if existing is not None:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="User already registred")
+            raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="User already registered")
 
         user = await self.user_repository.create_user(data)
         return UserResponse.model_validate(user)
