@@ -73,3 +73,7 @@ class BookingRepository:
     async def get_bookings_for_user(self, current_user: User) -> list[Booking]:
         result = await self.db.execute(select(Booking).where(Booking.user_id == current_user.id))
         return result.scalars().all()
+
+    async def get_all_bookings(self) -> list[Booking]:
+        result = await self.db.execute(select(Booking))
+        return result.scalars().all()
